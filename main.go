@@ -1,3 +1,4 @@
+// main package is the main of tfvergen.
 package main
 
 import (
@@ -8,17 +9,18 @@ import (
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 )
 
+// getRequiredVersion returns required_version from tf files in the cwd.
 func getRequiredVersion() (string, error) {
 	module, _ := tfconfig.LoadModule(".")
 	if len(module.RequiredCore) < 1 {
 		return "", fmt.Errorf("There is no required version.")
 	}
-	versionConstraint := module.RequiredCore[0]
+	constraint := module.RequiredCore[0]
 
 	r := regexp.MustCompile(`\d+\.\d+\.\d+`)
-	version := r.FindString(versionConstraint)
+	version := r.FindString(constraint)
 	if version == "" {
-		fmt.Fprintf(os.Stderr, "Fail to extract version from %s\n", versionConstraint)
+		fmt.Fprintf(os.Stderr, "Fail to extract version from %s\n", constraint)
 	}
 
 	return version, nil
