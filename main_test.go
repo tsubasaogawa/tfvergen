@@ -49,7 +49,7 @@ func existsTfFile() bool {
 	return result
 }
 
-func TestPrintRequiredVersion(t *testing.T) {
+func TestPrintRequiredVersionWithFile(t *testing.T) {
 	tests := map[string]struct {
 		ver_string string
 		want       string
@@ -76,10 +76,17 @@ func TestPrintRequiredVersion(t *testing.T) {
 			}
 			fp.WriteString(fmt.Sprintf(tfTemplate, tt.ver_string))
 
-			ver := getRequiredVersion()
+			ver, _ := getRequiredVersion()
 			if ver != tt.want {
 				t.Errorf("Got: %s, Want: %s", ver, tt.want)
 			}
 		})
+	}
+}
+
+func TestPrintRequiredVersionWithNoFile(t *testing.T) {
+	ver, err := getRequiredVersion()
+	if err == nil {
+		t.Errorf("Got: %s, Want: (Error)", ver)
 	}
 }

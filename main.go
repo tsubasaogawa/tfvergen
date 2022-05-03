@@ -8,11 +8,10 @@ import (
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 )
 
-func getRequiredVersion() string {
+func getRequiredVersion() (string, error) {
 	module, _ := tfconfig.LoadModule(".")
 	if len(module.RequiredCore) < 1 {
-		fmt.Fprintln(os.Stderr, "There is no required version.")
-		os.Exit(1)
+		return "", fmt.Errorf("There is no required version.")
 	}
 	versionConstraint := module.RequiredCore[0]
 
@@ -22,10 +21,14 @@ func getRequiredVersion() string {
 		fmt.Fprintf(os.Stderr, "Fail to extract version from %s\n", versionConstraint)
 	}
 
-	return version
+	return version, nil
 }
 
 func main() {
-	version := getRequiredVersion()
+	version, err := getRequiredVersion()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
 	fmt.Printf("%s\n", version)
 }
