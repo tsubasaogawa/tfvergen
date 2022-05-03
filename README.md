@@ -1,0 +1,2 @@
+# tfvergen
+.terraform-version generator
