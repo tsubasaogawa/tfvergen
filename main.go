@@ -9,11 +9,13 @@ import (
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 )
 
+const VERSION string = "0.0.1"
+
 // getRequiredVersion returns required_version from tf files in the cwd.
 func getRequiredVersion() (string, error) {
 	module, _ := tfconfig.LoadModule(".")
 	if len(module.RequiredCore) < 1 {
-		return "", fmt.Errorf("There is no required version.")
+		return "", fmt.Errorf("tfvergen %s\nThere is no required version.", VERSION)
 	}
 	constraint := module.RequiredCore[0]
 
